@@ -5,9 +5,9 @@ Yaoi::init();
 
 $key = explode('/', substr($_SERVER['REQUEST_URI'], 1), 2);
 
-echo '<pre>';
+//echo '<pre>';
 //print_r($_SERVER);
-print_r($key);
+//print_r($key);
 
 
 if (empty($key[0]) || empty($key[1])) {
@@ -20,15 +20,13 @@ Usage:
         <i>value</i>,
         <i>ttl</i>, expiration time in seconds from now, default unlimited,
         <i>content-type</i>, default 'text/html',
-
-
 </pre>
 
-    <form action="/" method="post">
-        Key <input name="url" onchange="this.form.action = this.value" />
-        <textarea name="value" style="width:100%;height: 100px"></textarea>
-        <button type="submit">save</button>
-    </form>
+<form action="/" method="post">
+    Key <input name="url" onchange="this.form.action = this.value" />
+    <textarea name="value" style="width:100%;height: 100px"></textarea>
+    <button type="submit">save</button>
+</form>
 <?php
     exit();
 }
@@ -43,7 +41,7 @@ try {
             //header("HTTP/1.0 404 Not Found");
         }
         else {
-            echo $value;
+            echo gzdecode($value);
         }
     }
     else {
@@ -51,7 +49,7 @@ try {
             $storage->delete($key[1]);
         }
         else {
-            $storage->set($key[1], $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
+            $storage->set($key[1], gzencode($_POST['value']), empty($_POST['ttl']) ? null : $_POST['ttl']);
         }
     }
 }
