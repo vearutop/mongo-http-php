@@ -32,7 +32,7 @@ Usage:
 }
 
 try {
-    $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache?compression=1');
+    $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache');
 
     if (!isset($_POST['value'])) {
         $value = $storage->get($key[1]);
