@@ -20,7 +20,15 @@ Usage:
         <i>value</i>,
         <i>ttl</i>, expiration time in seconds from now, default unlimited,
         <i>content-type</i>, default 'text/html',
+
+
 </pre>
+
+    <form action="/" method="post">
+        Key <input name="url" onchange="this.form.action = this.value" />
+        <textarea name="value" style="width:100%;height: 100px"></textarea>
+        <button type="submit">save</button>
+    </form>
 <?php
     exit();
 }
@@ -28,7 +36,7 @@ Usage:
 try {
     $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache');
 
-    if (empty($_POST['value'])) {
+    if (!isset($_POST['value'])) {
         $value = $storage->get($key[1]);
         if ($value === null) {
             header("Status: 404 Not Found");
@@ -39,7 +47,12 @@ try {
         }
     }
     else {
-        $storage->set($key, $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
+        if (!$_POST['value']) {
+            $storage->delete($key[1]);
+        }
+        else {
+            $storage->set($key[1], $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
+        }
     }
 }
 catch (Storage_Exception $e) {
