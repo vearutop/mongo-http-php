@@ -1,9 +1,16 @@
 <?php
 
 require_once __DIR__ . '/../php-yaoi/modules/Yaoi.php';
-$key = explode('/', $_SERVER['REDIRECT_URL'], 3);
+Yaoi::init();
 
-if (empty($key[0]) || empty($key[1]) || empty($key[2])) {
+$key = explode('/', substr($_SERVER['REQUEST_URI'], 1), 2);
+
+echo '<pre>';
+//print_r($_SERVER);
+print_r($key);
+
+
+if (empty($key[0]) || empty($key[1])) {
     ?>
 <pre>
 Usage:
@@ -19,10 +26,10 @@ Usage:
 }
 
 try {
-    $storage = Storage::create('mongo://localhost/' . $key[0] . '/' . $key[1]);
+    $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache');
 
     if (empty($_POST['value'])) {
-        $value = $storage->get($key[2]);
+        $value = $storage->get($key[1]);
         if ($value === null) {
             header("Status: 404 Not Found");
             //header("HTTP/1.0 404 Not Found");
