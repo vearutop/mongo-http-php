@@ -18,19 +18,23 @@ Usage:
     exit();
 }
 
-$storage = Storage::create('mongo://localhost/' . $key[0] . '/' . $key[1]);
+try {
+    $storage = Storage::create('mongo://localhost/' . $key[0] . '/' . $key[1]);
 
-if (empty($_POST['value'])) {
-    $value = $storage->get($key[2]);
-    if ($value === null) {
-        header("Status: 404 Not Found");
-        //header("HTTP/1.0 404 Not Found");
+    if (empty($_POST['value'])) {
+        $value = $storage->get($key[2]);
+        if ($value === null) {
+            header("Status: 404 Not Found");
+            //header("HTTP/1.0 404 Not Found");
+        }
+        else {
+            echo $value;
+        }
     }
     else {
-        echo $value;
+        $storage->set($key, $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
     }
 }
-else {
-    $storage->set($key, $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
+catch (Storage_Exception $e) {
+    echo $e->getMessage();
 }
-
