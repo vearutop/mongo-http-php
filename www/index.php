@@ -49,7 +49,7 @@ try {
             $storage->delete($key[1]);
         }
         else {
-            $storage->set($key[1], $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
+            $storage->set($key[1], $_POST['value']);
         }
     }
 }
