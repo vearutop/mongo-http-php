@@ -32,7 +32,7 @@ Usage:
 }
 
 try {
-    $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache');
+    $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache?compression=1');
 
     if (!isset($_POST['value'])) {
         $value = $storage->get($key[1]);
@@ -41,7 +41,7 @@ try {
             //header("HTTP/1.0 404 Not Found");
         }
         else {
-            echo gzdecode($value);
+            echo $value;
         }
     }
     else {
@@ -49,7 +49,7 @@ try {
             $storage->delete($key[1]);
         }
         else {
-            $storage->set($key[1], gzencode($_POST['value']), empty($_POST['ttl']) ? null : $_POST['ttl']);
+            $storage->set($key[1], $_POST['value'], empty($_POST['ttl']) ? null : $_POST['ttl']);
         }
     }
 }
