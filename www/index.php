@@ -34,7 +34,7 @@ Usage:
 try {
     $storage = Storage::create('mongo://localhost/' . $key[0] . '/cache?compression=1');
 
-    if (!isset($_POST['value'])) {
+    if (!isset($_POST['cmd'])) {
         $value = $storage->get($key[1]);
         if ($value === null) {
             header("Status: 404 Not Found");
@@ -45,11 +45,14 @@ try {
         }
     }
     else {
-        if (!$_POST['value']) {
-            $storage->delete($key[1]);
-        }
-        else {
+        if ('set' === $_POST['cmd']) {
             $storage->set($key[1], $_POST['value']);
+        }
+        elseif ('deleteAll' === $_POST['cmd']) {
+            $storage->deleteAll();
+        }
+        elseif ('delete' === $_POST['cmd']) {
+            $storage->delete($key[1]);
         }
     }
 }
